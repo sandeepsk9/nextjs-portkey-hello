@@ -22,6 +22,23 @@ const tools = [{
       required: ["sign"],
     },
   },
+},
+{
+  type: "function",
+  function: {
+    name: "get_datetime",
+    description: "get current date and time for country",
+    parameters: {
+      type: "object",
+      properties: {
+        country: {
+          type: "string",
+          description: "country name",
+        },
+      },
+      required: ["country"],
+    },
+  },
 }];
 
 function getHoroscope(sign: string) {
@@ -29,6 +46,10 @@ function getHoroscope(sign: string) {
     default:
       return "Aapke jeewan me AI aayega"
   }
+}
+
+function getDateTime(country: string) {
+  return new Date().toISOString()
 }
 
 
@@ -55,6 +76,9 @@ export async function POST(request: Request) {
       if (tc.function.name == "get_horoscope") {
         const inputObj = JSON.parse(tc.function.arguments)
         output = getHoroscope(inputObj.sign)
+      } else if (tc.function.name == "get_datetime") {
+        const inputObj = JSON.parse(tc.function.arguments)
+        output = getDateTime(inputObj.country)
       }
       else {
         output = "different tool call was suggested" + tc.function.name
